@@ -1,0 +1,668 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Tanvita Mandava | Portfolio</title>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Poppins', sans-serif;
+      background: #1a1a1a;
+      color: #ffffff;
+      overflow-x: hidden;
+      cursor: none;
+    }
+
+    /* Custom Cursor */
+    .cursor {
+      position: fixed;
+      width: 20px;
+      height: 20px;
+      background: #00ff88;
+      border-radius: 50%;
+      pointer-events: none;
+      z-index: 10000;
+      transition: transform 0.1s ease;
+    }
+
+    .cursor-follower {
+      position: fixed;
+      width: 40px;
+      height: 40px;
+      border: 2px solid rgba(0, 255, 136, 0.3);
+      border-radius: 50%;
+      pointer-events: none;
+      z-index: 9999;
+      transition: all 0.3s ease;
+    }
+
+    /* Loading Screen */
+    .loading-screen {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: #1a1a1a;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      z-index: 9998;
+      transition: opacity 0.5s ease;
+    }
+
+    .loading-text {
+      font-size: 3rem;
+      font-weight: 700;
+      color: #00ff88;
+      opacity: 0;
+      animation: fadeInOut 2s ease-in-out;
+    }
+
+    @keyframes fadeInOut {
+      0%, 100% { opacity: 0; }
+      50% { opacity: 1; }
+    }
+
+    .loading-screen.fade-out {
+      opacity: 0;
+      pointer-events: none;
+    }
+
+    /* Main Content */
+    .main-content {
+      opacity: 0;
+      transition: opacity 0.5s ease 0.5s;
+    }
+
+    .main-content.show {
+      opacity: 1;
+    }
+
+    /* Header */
+    header {
+      background: linear-gradient(135deg, #1a1a1a 0%, #2d2d2d 100%);
+      padding: 1rem 0;
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      z-index: 1000;
+      overflow: hidden;
+      backdrop-filter: blur(10px);
+      border-bottom: 1px solid rgba(0, 255, 136, 0.2);
+    }
+
+    .nav-container {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 0 2rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .logo {
+      font-size: 2rem;
+      font-weight: 700;
+      color: #00ff88;
+      text-decoration: none;
+    }
+
+    nav {
+      display: flex;
+      gap: 2rem;
+    }
+
+    nav a {
+      color: #ffffff;
+      text-decoration: none;
+      font-weight: 600;
+      position: relative;
+      padding: 0.5rem 1rem;
+      transition: color 0.3s ease;
+      overflow: hidden;
+    }
+
+    nav a:hover {
+      color: #00ff88;
+    }
+
+    nav a::before {
+      content: '';
+      position: absolute;
+      bottom: 0;
+      left: -100%;
+      width: 100%;
+      height: 2px;
+      background: #00ff88;
+      transition: left 0.3s ease;
+    }
+
+    nav a:hover::before {
+      left: 0;
+    }
+
+    /* Animated Text */
+    .animated-text {
+      display: inline-block;
+      transition: transform 0.3s ease;
+    }
+
+    .animated-text:hover {
+      transform: translateY(-5px);
+    }
+
+    /* Hero Section */
+    .hero {
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      position: relative;
+      background: linear-gradient(135deg, #1a1a1a 0%, #2d2d2d 100%);
+      padding-top: 80px;
+    }
+
+    .hero-content {
+      max-width: 800px;
+      padding: 0 2rem;
+    }
+
+    .hero h1 {
+      font-size: 4rem;
+      font-weight: 700;
+      margin-bottom: 1rem;
+      background: linear-gradient(45deg, #00ff88, #ffffff);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+
+    .hero h2 {
+      font-size: 2rem;
+      color: #00ff88;
+      margin-bottom: 1rem;
+      font-weight: 600;
+    }
+
+    .hero p {
+      font-size: 1.2rem;
+      color: #cccccc;
+      margin-bottom: 2rem;
+      line-height: 1.6;
+    }
+
+    .profile-pic {
+      width: 200px;
+      height: 200px;
+      border-radius: 50%;
+      object-fit: cover;
+      border: 4px solid #00ff88;
+      margin-bottom: 2rem;
+      box-shadow: 0 0 30px rgba(0, 255, 136, 0.3);
+      transition: transform 0.3s ease, box-shadow 0.3s ease;
+    }
+
+    .profile-pic:hover {
+      transform: scale(1.05);
+      box-shadow: 0 0 50px rgba(0, 255, 136, 0.5);
+    }
+
+    /* Sections */
+    section {
+      padding: 6rem 2rem 4rem;
+      max-width: 1200px;
+      margin: 0 auto;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+    }
+
+    h2 {
+      color: #00ff88;
+      font-size: 2.5rem;
+      font-weight: 700;
+      margin-bottom: 2rem;
+      text-align: center;
+      position: relative;
+    }
+
+    h2::after {
+      content: '';
+      position: absolute;
+      bottom: -10px;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 60px;
+      height: 4px;
+      background: #00ff88;
+      border-radius: 2px;
+    }
+
+    /* Education Section */
+    .education-item {
+      background: rgba(255, 255, 255, 0.05);
+      backdrop-filter: blur(10px);
+      border: 1px solid rgba(0, 255, 136, 0.2);
+      border-radius: 15px;
+      padding: 2rem;
+      margin-bottom: 2rem;
+      transition: transform 0.3s ease, box-shadow 0.3s ease;
+    }
+
+    .education-item:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 10px 30px rgba(0, 255, 136, 0.2);
+    }
+
+    /* Projects */
+    .projects-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+      gap: 2rem;
+      margin-top: 2rem;
+    }
+
+    .project {
+      background: rgba(255, 255, 255, 0.05);
+      backdrop-filter: blur(10px);
+      border: 1px solid rgba(0, 255, 136, 0.2);
+      border-radius: 20px;
+      padding: 2rem;
+      transition: transform 0.3s ease, box-shadow 0.3s ease;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .project::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: -100%;
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(90deg, transparent, rgba(0, 255, 136, 0.1), transparent);
+      transition: left 0.5s ease;
+    }
+
+    .project:hover::before {
+      left: 100%;
+    }
+
+    .project:hover {
+      transform: translateY(-10px);
+      box-shadow: 0 20px 40px rgba(0, 255, 136, 0.3);
+    }
+
+    .project h3 {
+      color: #00ff88;
+      font-size: 1.5rem;
+      margin-bottom: 1rem;
+      font-weight: 600;
+    }
+
+    .project p {
+      color: #cccccc;
+      line-height: 1.6;
+    }
+
+    /* Skills */
+    .skills-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+      gap: 2rem;
+      margin-top: 2rem;
+    }
+
+    .skill-category {
+      background: rgba(255, 255, 255, 0.05);
+      backdrop-filter: blur(10px);
+      border: 1px solid rgba(0, 255, 136, 0.2);
+      border-radius: 15px;
+      padding: 2rem;
+      text-align: center;
+      transition: transform 0.3s ease;
+    }
+
+    .skill-category:hover {
+      transform: scale(1.05);
+    }
+
+    .skill-category h3 {
+      color: #00ff88;
+      margin-bottom: 1rem;
+      font-size: 1.3rem;
+    }
+
+    /* Contact */
+    .contact-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+      gap: 2rem;
+      margin-top: 2rem;
+    }
+
+    .contact-item {
+      background: rgba(255, 255, 255, 0.05);
+      backdrop-filter: blur(10px);
+      border: 1px solid rgba(0, 255, 136, 0.2);
+      border-radius: 15px;
+      padding: 2rem;
+      text-align: center;
+      transition: transform 0.3s ease;
+    }
+
+    .contact-item:hover {
+      transform: translateY(-5px);
+    }
+
+    .contact-item a {
+      color: #00ff88;
+      text-decoration: none;
+      font-weight: 600;
+    }
+
+    .contact-item a:hover {
+      color: #ffffff;
+    }
+
+    /* Footer */
+    footer {
+      background: #0d0d0d;
+      text-align: center;
+      padding: 2rem;
+      margin-top: 4rem;
+      border-top: 1px solid rgba(0, 255, 136, 0.2);
+    }
+
+    /* Responsive */
+    @media (max-width: 768px) {
+      .nav-container {
+        flex-direction: column;
+        gap: 1rem;
+      }
+
+      nav {
+        gap: 1rem;
+      }
+
+      .hero h1 {
+        font-size: 2.5rem;
+      }
+
+      .hero h2 {
+        font-size: 1.5rem;
+      }
+
+      section {
+        padding: 5rem 1rem 3rem;
+        min-height: auto;
+      }
+
+      .projects-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+  </style>
+</head>
+<body>
+  <!-- Custom Cursor -->
+  <div class="cursor"></div>
+  <div class="cursor-follower"></div>
+
+  <!-- Loading Screen -->
+  <div class="loading-screen" id="loadingScreen">
+    <div class="loading-text">Loading</div>
+  </div>
+
+  <!-- Main Content -->
+  <div class="main-content" id="mainContent">
+    <header>
+      <div class="nav-container">
+        <a href="#" class="logo">TANVITA</a>
+        <nav>
+          <a href="#home"><span class="animated-text">ABOUT</span></a>
+          <a href="#experience"><span class="animated-text">EXPERIENCE</span></a>
+          <a href="#projects"><span class="animated-text">PROJECTS</span></a>
+          <a href="#education"><span class="animated-text">EDUCATION</span></a>
+          <a href="#skills"><span class="animated-text">SKILLS</span></a>
+          <a href="#contact"><span class="animated-text">CONTACT</span></a>
+        </nav>
+      </div>
+    </header>
+
+    <section class="hero" id="home">
+      <div class="hero-content">
+        <img src="static/Tanvita_Photo.jpg" alt="Tanvita Mandava Photo" class="profile-pic" style="margin-bottom: 3rem;" />
+        <h1>Tanvita Mandava</h1>
+        <h2>CREATIVE CODER</h2>
+        <p>I'm a passionate Computer Science & Business Systems student with a strong foundation in Data Science, AI/ML, and creative problem-solving. I specialize in translating complex ideas into user-friendly solutions that captivate and engage.</p>
+
+      </div>
+    </section>
+
+    <section id="education">
+      <h2>Education</h2>
+      <div class="education-item">
+        <h3>Vellore Institute of Technology, Amaravati</h3>
+        <p><strong>B.Tech in Computer Science and Business Systems (2021–2025)</strong><br/>
+        CGPA: 8.69</p>
+      </div>
+      <div class="education-item">
+        <h3>Sri Chaitanya Junior Kalasala</h3>
+        <p><strong>Intermediate Education (2019–2021)</strong><br/>
+        Percentage: 91.8%</p>
+      </div>
+      <div class="education-item">
+        <h3>Sri Chaitanya High School</h3>
+        <p><strong>Secondary School (2018–2019)</strong><br/>
+        CGPA: 9.00</p>
+      </div>
+    </section>
+    
+    <section id="experience">
+      <h2>Experience</h2>
+      <div class="project" style="margin-bottom: 3rem;">
+        <h3>Intern – Alturasphere Technologies Pvt. Ltd.</h3>
+        <p><strong>Feb 2025 – Apr 2025</strong></p>
+        <p>Worked on <strong>Atsumae</strong>, a food delivery web application with features like:</p>
+        <ul style="color: #cccccc; margin-top: 1rem; margin-left: 1.5rem;">
+          <li>Smart Ordering System with Customization & Preferences</li>
+          <li>Secure Payment Integration & Real-Time Order Tracking (Overpass API)</li>
+          <li>Speech-to-Text API for Voice Input/Output</li>
+          <li>Restaurant Dashboard & Delivery Partner Panel (HTML, CSS, JS)</li>
+          <li>Ratings, Feedback, and Final Deployment</li>
+        </ul>
+      </div>
+      <div class="project">
+        <h3>Leadership & Event Roles</h3>
+        <ul style="color: #cccccc; margin-top: 1rem; margin-left: 1.5rem;">
+          <li>Co-lead, Events Department, Drushya Animation and Gaming (DAG) Club – VIT</li>
+          <li>Event Team Member, Computer Society of India (CSI) – VIT</li>
+          <li>School Co-Curricular Activities Captain – Sri Chaitanya High School</li>
+        </ul>
+      </div>
+    </section>
+    
+    <section id="projects">
+      <h2>Projects</h2>
+      <div class="projects-grid">
+        <div class="project">
+          <h3>Online Fraud Detection</h3>
+          <p>The Online Payments Fraud Detection system uses Logistic Regression to classify transactions as legitimate or fraudulent. It involves data preprocessing, followed by a train-test split to build and evaluate the model. Key features like transaction amount and device type help in prediction. A Flask web app enables real-time fraud detection through user input.</p>
+        </div>
+        <div class="project">
+          <h3>Phishing Site Detection (ANN)</h3>
+          <p>The Phishing Website Detection system uses an Artificial Neural Network (ANN) to classify URLs as safe or malicious. It automatically extracts key attributes from the URL, such as domain length and presence of suspicious keywords, for feature analysis. The trained model is integrated into the Flask backend, enabling real-time URL scanning and prediction.</p>
+        </div>
+        <div class="project">
+          <h3>Generative AI – Voice to Code</h3>
+          <p>The Vocal Code project is a real-time, speech-driven AI platform that converts natural voice commands into functional web page, Python, or C++ code using a fine-tuned LLaMA model integrated via Ollama. It leverages Speech-to-Text technology to interpret voice input and uses Generative AI to generate accurate, executable code.</p>
+        </div>
+        <div class="project">
+          <h3>Smart Door Lock (IoT)</h3>
+          <p>The Intelligent Door Lock project is a smart security system that combines Bluetooth, Wi-Fi, image recognition, and a 4x4 matrix keypad to offer secure and flexible access control. It integrates with platforms like Blynk IoT and BlueDot for remote monitoring and smartphone-based unlocking.</p>
+        </div>
+      </div>
+    </section>
+
+    <section id="skills">
+      <h2>Skills</h2>
+      <div class="skills-grid">
+        <div class="skill-category">
+          <h3>Languages</h3>
+          <p>Python, C++, SQL</p>
+        </div>
+        <div class="skill-category">
+          <h3>Frameworks</h3>
+          <p>Flask, Machine Learning (LogReg, ANN)</p>
+        </div>
+        <div class="skill-category">
+          <h3>Tools</h3>
+          <p>VS Code, Jupyter Notebook, MySQL</p>
+        </div>
+        <div class="skill-category">
+          <h3>Soft Skills</h3>
+          <p>Leadership, Communication, Time Management</p>
+        </div>
+        <div class="skill-category">
+          <h3>Business</h3>
+          <p>Basics of Marketing, Finance & Accounting</p>
+        </div>
+      </div>
+    </section>
+
+    <section id="contact">
+      <h2>Contact</h2>
+      <div class="contact-grid">
+        <div class="contact-item">
+          <h3>Email</h3>
+          <a href="mailto:nstmandava@gmail.com">nstmandava@gmail.com</a>
+        </div>
+        <div class="contact-item">
+          <h3>Phone</h3>
+          <p>+91 8143711725</p>
+        </div>
+        <div class="contact-item">
+          <h3>GitHub</h3>
+          <a href="https://github.com/tanvitamandava/projects" target="_blank">github.com/tanvitamandava</a>
+        </div>
+        <div class="contact-item">
+          <h3>LinkedIn</h3>
+          <a href="https://www.linkedin.com/in/tanvita-mandava-67b25221a/" target="_blank">Tanvita Mandava</a>
+        </div>
+        <div class="contact-item">
+          <h3>Resume</h3>
+          <a href="https://drive.google.com/file/d/1ZZm0jHcHmltTORQ17EnYg3n_0thsrbGP/view?usp=sharing" target="_blank">View Resume</a>
+        </div>
+      </div>
+    </section>
+
+    <footer>
+      <p>© 2025 Tanvita Mandava. All rights reserved.</p>
+    </footer>
+  </div>
+
+  <script>
+    // Custom Cursor
+    const cursor = document.querySelector('.cursor');
+    const cursorFollower = document.querySelector('.cursor-follower');
+
+    document.addEventListener('mousemove', (e) => {
+      cursor.style.left = e.clientX + 'px';
+      cursor.style.top = e.clientY + 'px';
+      
+      setTimeout(() => {
+        cursorFollower.style.left = e.clientX + 'px';
+        cursorFollower.style.top = e.clientY + 'px';
+      }, 100);
+    });
+
+    // Cursor hover effects
+    const interactiveElements = document.querySelectorAll('a, button, .project, .skill-category, .contact-item');
+    
+    interactiveElements.forEach(el => {
+      el.addEventListener('mouseenter', () => {
+        cursor.style.transform = 'scale(1.5)';
+        cursorFollower.style.transform = 'scale(1.5)';
+      });
+      
+      el.addEventListener('mouseleave', () => {
+        cursor.style.transform = 'scale(1)';
+        cursorFollower.style.transform = 'scale(1)';
+      });
+    });
+
+    // Loading Screen
+    window.addEventListener('load', () => {
+      setTimeout(() => {
+        document.getElementById('loadingScreen').classList.add('fade-out');
+        document.getElementById('mainContent').classList.add('show');
+        
+        setTimeout(() => {
+          document.getElementById('loadingScreen').style.display = 'none';
+        }, 500);
+      }, 2000);
+    });
+
+    // Animated Text Hover Effect
+    const animatedTexts = document.querySelectorAll('.animated-text');
+    
+    animatedTexts.forEach(text => {
+      text.addEventListener('mouseenter', () => {
+        const letters = text.textContent.split('');
+        text.innerHTML = '';
+        
+        letters.forEach((letter, index) => {
+          const span = document.createElement('span');
+          span.textContent = letter;
+          span.style.display = 'inline-block';
+          span.style.animation = `letterFloat 0.5s ease ${index * 0.1}s both`;
+          text.appendChild(span);
+        });
+      });
+      
+      text.addEventListener('mouseleave', () => {
+        setTimeout(() => {
+          text.innerHTML = text.textContent;
+        }, 500);
+      });
+    });
+
+    // Add letter float animation
+    const style = document.createElement('style');
+    style.textContent = `
+      @keyframes letterFloat {
+        0% { transform: translateY(0px); }
+        50% { transform: translateY(-10px); }
+        100% { transform: translateY(0px); }
+      }
+    `;
+    document.head.appendChild(style);
+
+    // Smooth Scrolling
+    document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+      anchor.addEventListener('click', function (e) {
+        e.preventDefault();
+        const target = document.querySelector(this.getAttribute('href'));
+        if (target) {
+          target.scrollIntoView({
+            behavior: 'smooth',
+            block: 'start'
+          });
+        }
+      });
+    });
+  </script>
+</body>
+</html>
